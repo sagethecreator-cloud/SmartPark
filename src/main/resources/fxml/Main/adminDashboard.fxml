@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane prefHeight="650" prefWidth="1100" style="-fx-background-color: #0f0f1a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smartpark.controllers.AdminDashboardController">
+
+    <Circle fill="#6c5ce7" opacity="0.045" radius="220" translateX="-280" translateY="-160" />
+    <Circle fill="#a29bfe" opacity="0.055" radius="160" translateX="320" translateY="220" />
+    <Circle fill="#6c5ce7" opacity="0.07" radius="80" translateX="350" translateY="-210" />
+
+    <VBox maxHeight="Infinity" maxWidth="Infinity" spacing="0" style="-fx-background-color: transparent; -fx-padding: 28 40 20 40;">
+
+        <HBox alignment="CENTER_LEFT" spacing="14">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label style="-fx-text-fill: white;                               -fx-background-color: #6c5ce7;                               -fx-background-radius: 8;                               -fx-padding: 6 12;                               -fx-font-size: 14;                               -fx-font-weight: bold;                               -fx-font-family: 'Segoe UI';" text="SP" />
+                <Label style="-fx-text-fill: white;                               -fx-font-size: 26;                               -fx-font-weight: bold;                               -fx-font-family: 'Segoe UI';" text="SmartPark" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER" spacing="10">
+                <VBox alignment="CENTER" spacing="2" style="-fx-background-color: rgba(108,92,231,0.12);                              -fx-background-radius: 10;                              -fx-padding: 8 16;                              -fx-border-color: rgba(108,92,231,0.2);                              -fx-border-radius: 10;">
+                    <Label fx:id="statLabel" style="-fx-text-fill: #a29bfe;                                   -fx-font-size: 22;                                   -fx-font-weight: bold;                                   -fx-font-family: 'Segoe UI';" text="0" />
+                    <Label style="-fx-text-fill: #6a6a8a;                                   -fx-font-size: 10;                                   -fx-font-family: 'Segoe UI';" text="TOTAL PARKED" />
+                </VBox>
+                <VBox alignment="CENTER" spacing="2" style="-fx-background-color: rgba(108,92,231,0.12);                              -fx-background-radius: 10;                              -fx-padding: 8 16;                              -fx-border-color: rgba(108,92,231,0.2);                              -fx-border-radius: 10;">
+                    <Label fx:id="availableStatLabel" style="-fx-text-fill: #a29bfe;                                   -fx-font-size: 22;                                   -fx-font-weight: bold;                                   -fx-font-family: 'Segoe UI';" text="0" />
+                    <Label style="-fx-text-fill: #6a6a8a;                                   -fx-font-size: 10;                                   -fx-font-family: 'Segoe UI';" text="AVAILABLE" />
+                </VBox>
+            </HBox>
+        </HBox>
+
+        <Region prefHeight="6" />
+
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label style="-fx-text-fill: #a29bfe;                           -fx-font-size: 11;                           -fx-font-weight: bold;                           -fx-font-family: 'Segoe UI';                           -fx-letter-spacing: 2;" text="ADMIN CONTROL CENTER" />
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <Region prefHeight="16" />
+
+        <!-- Card row 0: 4 equal cards -->
+        <GridPane hgap="18" vgap="0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="25" />
+                <ColumnConstraints percentWidth="25" />
+                <ColumnConstraints percentWidth="25" />
+                <ColumnConstraints percentWidth="25" />
+            </columnConstraints>
+
+            <!-- Main action cards -->
+
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(108,92,231,0.45);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#6c5ce7" opacity="0.18" radius="38" />
+                        <Circle fill="#6c5ce7" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="🚗" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Parked Vehicles" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="View all parked vehicles sorted by time" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleViewParkedVehicles" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(108,92,231,0.45);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#6c5ce7" opacity="0.18" radius="38" />
+                        <Circle fill="#6c5ce7" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="📋" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Billing History" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Browse past transactions with filter" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleViewHistory" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(108,92,231,0.45);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#6c5ce7" opacity="0.18" radius="38" />
+                        <Circle fill="#6c5ce7" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="📊" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Generate Report" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Summary report by day, week or month" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleGenerateReport" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(108,92,231,0.45);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#6c5ce7" opacity="0.18" radius="38" />
+                        <Circle fill="#6c5ce7" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="🅿" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Manage Slots" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Add or remove parking slots" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleManageSlots" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+         <rowConstraints>
+            <RowConstraints />
+         </rowConstraints>
+
+        </GridPane>
+
+        <Region prefHeight="16" />
+
+        <!-- Card row 1: 3 equal cards -->
+        <GridPane hgap="18" vgap="0">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33.33" />
+                <ColumnConstraints percentWidth="33.33" />
+                <ColumnConstraints percentWidth="33.33" />
+            </columnConstraints>
+
+            <!-- Parking Rates -->
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(162,155,254,0.30);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#a29bfe" opacity="0.18" radius="38" />
+                        <Circle fill="#a29bfe" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="💰" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Parking Rates" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Update per-minute rates per type" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleManageRates" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <!-- EV Charging Rates -->
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(162,155,254,0.30);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#a29bfe" opacity="0.18" radius="38" />
+                        <Circle fill="#a29bfe" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="⚡" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="EV Charging Rates" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Manage EV charging rates and mode" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleEVRates" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <!-- Monitor EV -->
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(162,155,254,0.30);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="#a29bfe" opacity="0.18" radius="38" />
+                        <Circle fill="#a29bfe" opacity="0.22" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: white;" text="🔋" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Monitor EV" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Monitor all charging EVs in real time" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleMonitorEV" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+         <rowConstraints>
+            <RowConstraints />
+         </rowConstraints>
+
+        </GridPane>
+
+        <Region prefHeight="16" />
+
+        <!-- Card row 2: Destructive / utility actions -->
+        <GridPane hgap="18" vgap="0" VBox.vgrow="ALWAYS">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="33.33" />
+                <ColumnConstraints percentWidth="33.33" />
+                <ColumnConstraints percentWidth="33.33" />
+            </columnConstraints>
+
+            <!-- Export Report -->
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.40);                               -fx-background-radius: 20;                               -fx-border-color: rgba(108,92,231,0.25);                               -fx-border-width: 1;                               -fx-border-radius: 20;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="18" />
+                    <StackPane>
+                        <Circle fill="#6c5ce7" opacity="0.10" radius="38" />
+                        <Circle fill="#6c5ce7" opacity="0.14" radius="30" />
+                        <Label style="-fx-font-size: 24; -fx-text-fill: #a29bfe;" text="📤" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: #c0c0d0; -fx-font-size: 12; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Export Report" />
+                    <Label style="-fx-text-fill: #5a5a7a; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Export all history to report file" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleExportReport" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <!-- Clear History -->
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(231,76,60,0.30);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="rgba(231,76,60,0.18)" radius="38" />
+                        <Circle fill="rgba(231,76,60,0.22)" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: #e74c3c;" text="🗑" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: #e74c3c; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Clear History" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Wipe all billing history records" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleClearHistory" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+
+            <!-- Logout -->
+            <StackPane maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-color: rgba(28,22,50,0.82);                               -fx-background-radius: 20;                               -fx-border-color: rgba(231,76,60,0.30);                               -fx-border-width: 1.2;                               -fx-border-radius: 20;" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                <VBox alignment="CENTER" spacing="8" StackPane.alignment="CENTER">
+                    <Region prefHeight="16" />
+                    <StackPane>
+                        <Circle fill="rgba(231,76,60,0.18)" radius="38" />
+                        <Circle fill="rgba(231,76,60,0.22)" radius="30" />
+                        <Label style="-fx-font-size: 26; -fx-text-fill: #e74c3c;" text="🚪" />
+                    </StackPane>
+                    <Label style="-fx-text-fill: #e74c3c; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="Logout" />
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 10; -fx-font-family: 'Segoe UI'; -fx-wrap-text: true; -fx-max-width: 150;" text="Save and exit the system" />
+                    <Region prefHeight="8" />
+                </VBox>
+                <Button maxHeight="Infinity" maxWidth="Infinity" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-width: 0;" />
+            </StackPane>
+         <rowConstraints>
+            <RowConstraints />
+         </rowConstraints>
+
+        </GridPane>
+
+        <Region prefHeight="12" />
+
+        <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: rgba(255,255,255,0.02);                      -fx-background-radius: 10;                      -fx-padding: 10 18;">
+            <Label fx:id="statusLabel" style="-fx-text-fill: #6a6a8a;                           -fx-font-size: 11;                           -fx-font-family: 'Segoe UI';" text="Ready" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label style="-fx-text-fill: #3a3a5a;                           -fx-font-size: 11;                           -fx-font-family: 'Segoe UI';" text="Smart Park" />
+        </HBox>
+
+    </VBox>
+
+</StackPane>

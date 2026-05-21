@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="580" prefWidth="900" style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0f0f1a 0%, #1a1030 60%, #0d0d1f 100%);" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smartpark.controllers.WelcomeController">
+
+        <!-- Decorative ambient circles -->
+        <!-- Large glow - top left -->
+    <Circle fill="#6c5ce7" opacity="0.045" radius="220" translateX="-280" translateY="-160" />
+    <!-- Medium glow - bottom right -->
+    <Circle fill="#a29bfe" opacity="0.055" radius="160" translateX="320" translateY="220" />
+    <!-- Small accent - top right -->
+    <Circle fill="#6c5ce7" opacity="0.07" radius="80" translateX="350" translateY="-210" />
+
+        <!-- Main content -->
+        <VBox alignment="CENTER" spacing="0">
+
+        <!-- Top brand strip -->
+        <HBox alignment="CENTER_LEFT" prefWidth="900" style="-fx-padding: 28 48 0 48;">
+            <Label style="-fx-text-fill: white;                           -fx-background-color: #6c5ce7;                           -fx-background-radius: 6;                           -fx-padding: 4 10;                           -fx-font-size: 12;                           -fx-font-weight: bold;                           -fx-font-family: 'Segoe UI';" text="SP" />
+            <Label style="-fx-text-fill: white;                           -fx-font-size: 16;                           -fx-font-weight: bold;                           -fx-font-family: 'Segoe UI';                           -fx-padding: 0 0 0 10;" text="SmartPark" />
+            <!-- Flexible spacing -->
+            <Region fx:id="spacer" HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <Region prefHeight="52" />
+
+        <!-- Headline block -->
+        <VBox alignment="CENTER" spacing="10">
+
+            <!-- Thin decorative line above -->
+            <HBox alignment="CENTER">
+                <Label style="-fx-text-fill: #a29bfe;                               -fx-font-size: 11;                               -fx-font-family: 'Segoe UI';                               -fx-padding: 0 12;" text="Parking Management System" />
+            </HBox>
+
+            <Label style="-fx-text-fill: white;                           -fx-font-size: 46;                           -fx-font-weight: bold;                           -fx-font-family: 'Segoe UI';" text="Welcome Back" />
+
+            <Label style="-fx-text-fill: #8888aa;                           -fx-font-size: 14;                           -fx-font-family: 'Segoe UI';" text="Choose your role to continue" />
+        </VBox>
+
+        <Region prefHeight="52" />
+
+        <!-- Role cards row -->
+        <HBox alignment="CENTER" spacing="28">
+
+                        <!-- Admin role card -->
+                        <StackPane>
+                <!-- Card background -->
+                <Rectangle arcHeight="20" arcWidth="20" height="280" style="-fx-fill: rgba(28,22,50,0.82);                                   -fx-stroke: rgba(108,92,231,0.45);                                   -fx-stroke-width: 1.2;" width="230" />
+
+                <!-- Purple top accent bar -->
+                <Rectangle arcHeight="0" arcWidth="0" height="4" style="-fx-fill: #6c5ce7;" translateY="-138" width="230" />
+
+                <!-- Card content -->
+                <VBox alignment="CENTER" prefHeight="280" prefWidth="230" spacing="16">
+
+                    <!-- Icon circle -->
+                    <StackPane>
+                        <Circle fill="#6c5ce7" opacity="0.18" radius="42" />
+                        <Circle fill="#6c5ce7" opacity="0.22" radius="34" />
+                        <Label style="-fx-text-fill: white; -fx-font-size: 26; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="🛡" />
+                    </StackPane>
+
+                    <!-- Title -->
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label style="-fx-text-fill: white;                                       -fx-font-size: 20;                                       -fx-font-weight: bold;                                       -fx-font-family: 'Segoe UI';" text="Admin" />
+                        <Label style="-fx-text-fill: #8888aa;                                       -fx-font-size: 11;                                       -fx-font-family: 'Segoe UI';                                       -fx-text-alignment: CENTER;                                       -fx-alignment: CENTER;                                       -fx-wrap-text: true;                                       -fx-max-width: 170;" text="Manage slots, rates, reports &amp; system settings" />
+                    </VBox>
+
+                    <!-- Enter button -->
+                    <Button fx:id="adminBtn" onAction="#goToAdminLogin" prefHeight="40" prefWidth="160" style="-fx-background-color: #6c5ce7;                                    -fx-text-fill: white;                                    -fx-font-size: 13;                                    -fx-font-weight: bold;                                    -fx-font-family: 'Segoe UI';                                    -fx-background-radius: 8;                                    -fx-cursor: hand;" text="Enter as Admin" />
+                </VBox>
+            </StackPane>
+
+            <!-- Vertical divider -->
+            <VBox alignment="CENTER" prefHeight="280" spacing="8" />
+
+                        <!-- User role card -->
+                        <StackPane>
+                <!-- Card background -->
+                <Rectangle arcHeight="20" arcWidth="20" height="280" style="-fx-fill: rgba(28,22,50,0.82);                                   -fx-stroke: rgba(162,155,254,0.30);                                   -fx-stroke-width: 1.2;" width="230" />
+
+                <!-- Soft accent bar -->
+                <Rectangle arcHeight="0" arcWidth="0" height="4" style="-fx-fill: #a29bfe;" translateY="-138" width="230" />
+
+                <!-- Card content -->
+                <VBox alignment="CENTER" prefHeight="280" prefWidth="230" spacing="16">
+
+                    <!-- Icon circle -->
+                    <StackPane>
+                        <Circle fill="#a29bfe" opacity="0.15" radius="42" />
+                        <Circle fill="#a29bfe" opacity="0.18" radius="34" />
+                        <Label style="-fx-text-fill: white; -fx-font-size: 26; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="👤" />
+                    </StackPane>
+
+                    <!-- Title -->
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label style="-fx-text-fill: white;                                       -fx-font-size: 20;                                       -fx-font-weight: bold;                                       -fx-font-family: 'Segoe UI';" text="User" />
+                        <Label style="-fx-text-fill: #8888aa;                                       -fx-font-size: 11;                                       -fx-font-family: 'Segoe UI';                                       -fx-text-alignment: CENTER;                                       -fx-alignment: CENTER;                                       -fx-wrap-text: true;                                       -fx-max-width: 170;" text="Park, exit vehicles &amp; check EV charging status" />
+                    </VBox>
+
+                    <!-- Enter button -->
+                    <Button fx:id="userBtn" onAction="#goToUserMenu" prefHeight="40" prefWidth="160" style="-fx-background-color: transparent;                                    -fx-text-fill: #a29bfe;                                    -fx-font-size: 13;                                    -fx-font-weight: bold;                                    -fx-font-family: 'Segoe UI';                                    -fx-border-color: #a29bfe;                                    -fx-border-radius: 8;                                    -fx-background-radius: 8;                                    -fx-border-width: 1.2;                                    -fx-cursor: hand;" text="Enter as User" />
+                </VBox>
+            </StackPane>
+
+        </HBox>
+
+        <Region prefHeight="44" />
+
+        <!-- Bottom footer strip -->
+        <HBox alignment="CENTER" spacing="20">
+            <Label style="-fx-text-fill: #3a3a5a;                           -fx-font-size: 11;" text="·" />
+            <Button onAction="#handleExit" prefHeight="41.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-text-fill: #5a5a7a; -fx-font-size: 13; -fx-font-family: 'Segoe UI'; -fx-border-color: #5a5a7a; -fx-cursor: hand; -fx-padding: 0;" text="Exit Application">
+            <font>
+               <Font name="System Bold" size="12.0" />
+            </font></Button>
+        </HBox>
+
+        <Region prefHeight="24" />
+
+    </VBox>
+
+</StackPane>

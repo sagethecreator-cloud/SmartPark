@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="600" prefWidth="900" style="-fx-background-color: #0f0f1a; -fx-font-family: 'Segoe UI';" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smartpark.controllers.ExitVehicleController">
+
+    <!-- Top Nav Bar -->
+    <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-background-color: #11101a; -fx-border-color: #1e1a2e; -fx-border-width: 0 0 1 0;                  -fx-padding: 14 24; -fx-pref-height: 60;">
+        <Button onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: #a29bfe;                        -fx-font-size: 12; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';                        -fx-border-width: 0; -fx-cursor: hand; -fx-padding: 6 10;" text="← Back" />
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label style="-fx-text-fill: white; -fx-background-color: #6c5ce7; -fx-background-radius: 8;                           -fx-padding: 6 12; -fx-font-size: 14; -fx-font-weight: bold;" text="SP" />
+            <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="SmartPark" />
+        </HBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label style="-fx-text-fill: #a29bfe; -fx-font-size: 13; -fx-font-weight: bold;" text="🚪  Exit Vehicle" />
+    </HBox>
+
+    <!-- Content Area -->
+    <HBox VBox.vgrow="ALWAYS">
+
+        <!-- Left Column - Lookup -->
+        <VBox prefWidth="400" spacing="0" style="-fx-background-color: #13101e; -fx-padding: 36;">
+
+            <Label style="-fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold;                           -fx-padding: 0 0 16 0;" text="Lookup Vehicle" />
+
+            <Label style="-fx-text-fill: #c0c0d0; -fx-font-size: 12; -fx-padding: 0 0 4 0;" text="Plate number or Entry ID" />
+            <TextField fx:id="lookupField" prefHeight="44" prefWidth="360" promptText="Plate number or Entry ID" style="-fx-background-color: #0b0b14; -fx-text-fill: white;                               -fx-font-size: 13; -fx-background-radius: 8; -fx-padding: 10 14;                               -fx-border-color: rgba(108,92,231,0.3); -fx-border-radius: 8;                               -fx-border-width: 1; -fx-prompt-text-fill: #5a5a7a;                               " />
+
+            <Region prefHeight="12" />
+
+            <Button fx:id="lookupBtn" onAction="#handleLookup" prefHeight="44" prefWidth="360" style="-fx-background-color: #6c5ce7; -fx-text-fill: white;                            -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 10;                            -fx-cursor: hand; -fx-border-width: 0;" text="🔍  Find Vehicle" />
+
+            <Region prefHeight="20" />
+
+            <VBox fx:id="vehicleCard" managed="false" spacing="8" style="-fx-background-color: #1e1a2e; -fx-background-radius: 12;                          -fx-border-color: #2e2a42; -fx-border-radius: 12; -fx-border-width: 1;                          -fx-padding: 16;" visible="false">
+
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Owner:" />
+                    <Label fx:id="ownerLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Plate:" />
+                    <Label fx:id="plateLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Type:" />
+                    <Label fx:id="typeLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Entry ID:" />
+                    <Label fx:id="entryIdLabel" style="-fx-text-fill: #a29bfe; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Parked since:" />
+                    <Label fx:id="entryTimeLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+            </VBox>
+
+            <Region prefHeight="16" />
+
+            <Button fx:id="exitBtn" disable="true" onAction="#handleExit" prefHeight="46" prefWidth="360" style="-fx-background-color: #6c5ce7; -fx-text-fill: white;                            -fx-font-size: 14; -fx-font-weight: bold; -fx-background-radius: 10;                            -fx-cursor: hand; -fx-border-width: 0;" text="✅  Confirm Exit &amp; Generate Bill" />
+
+            <Region prefHeight="10" />
+
+            <Label fx:id="errorLabel" style="-fx-text-fill: #e17055; -fx-font-size: 12;" />
+        </VBox>
+
+        <!-- Right Column - Receipt -->
+        <VBox spacing="0" style="-fx-background-color: #0f0f1a; -fx-padding: 36;" HBox.hgrow="ALWAYS">
+
+            <Label style="-fx-text-fill: white; -fx-font-size: 15; -fx-font-weight: bold;                           -fx-padding: 0 0 16 0;" text="Bill Receipt" />
+
+            <VBox fx:id="receiptCard" managed="false" spacing="8" style="-fx-background-color: #1e1a2e; -fx-background-radius: 14;                          -fx-padding: 20;" visible="false">
+
+                <Label style="-fx-text-fill: #a29bfe; -fx-font-size: 12; -fx-font-weight: bold;                               -fx-alignment: CENTER;" text="PARKING RECEIPT" />
+
+                <Separator style="-fx-background-color: rgba(108,92,231,0.2); -fx-pref-height: 1;" />
+
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Duration:" />
+                    <Label fx:id="durationLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Rate/min:" />
+                    <Label fx:id="rateLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+                <HBox spacing="6">
+                    <Label style="-fx-text-fill: #8888aa; -fx-font-size: 12;" text="Subtotal:" />
+                    <Label fx:id="subtotalLabel" style="-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;" />
+                </HBox>
+
+                <Separator style="-fx-background-color: rgba(108,92,231,0.2); -fx-pref-height: 1;" />
+
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;" text="TOTAL DUE" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="totalLabel" style="-fx-text-fill: #6c5ce7; -fx-font-size: 22; -fx-font-weight: bold;" text="Rs 0.00" />
+                </HBox>
+
+                <Region prefHeight="12" />
+
+                <Label fx:id="thankYouLabel" style="-fx-text-fill: #a29bfe; -fx-font-size: 12; -fx-font-style: italic;                               -fx-alignment: CENTER;" text="Thank you! Drive safely. 🚗" />
+            </VBox>
+
+            <VBox fx:id="receiptPlaceholder" alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS">
+                <StackPane alignment="CENTER" prefHeight="80" prefWidth="80" style="-fx-background-color: rgba(108,92,231,0.07); -fx-background-radius: 40;">
+                    <Label style="-fx-font-size: 36; -fx-text-fill: #6c5ce7; -fx-alignment: CENTER;" text="✍" />
+                </StackPane>
+                <Label style="-fx-text-fill: #5a5a7a; -fx-font-size: 13; -fx-alignment: CENTER;                               -fx-text-alignment: CENTER;" text="Bill will appear here&#10;after exit is confirmed" />
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+        </VBox>
+    </HBox>
+
+    <!-- Bottom Status Bar -->
+    <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: rgba(255,255,255,0.02); -fx-background-radius: 0;                  -fx-padding: 10 24; -fx-border-color: #1e1a2e; -fx-border-width: 1 0 0 0;">
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
+
+</VBox>

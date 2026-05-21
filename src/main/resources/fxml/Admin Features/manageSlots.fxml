@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane prefHeight="650" prefWidth="1100" style="-fx-background-color: #0f0f1a;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smartpark.controllers.ManageSlotsController">
+
+    <Circle fill="#6c5ce7" opacity="0.045" radius="220" translateX="-280" translateY="-160" />
+    <Circle fill="#a29bfe" opacity="0.055" radius="160" translateX="320" translateY="220" />
+    <Circle fill="#6c5ce7" opacity="0.07" radius="80" translateX="350" translateY="-210" />
+
+    <VBox maxHeight="Infinity" maxWidth="Infinity" spacing="0" style="-fx-background-color: transparent; -fx-padding: 28 40 20 40;">
+
+        <HBox alignment="CENTER_LEFT" spacing="14">
+            <VBox spacing="5">
+                <Button fx:id="btnBack" onAction="#handleBack" prefHeight="28" prefWidth="90" style="-fx-background-color: rgba(162,155,254,0.12);                                -fx-text-fill: #a29bfe;                                -fx-font-size: 11;                                -fx-font-family: 'Segoe UI';                                -fx-font-weight: bold;                                -fx-background-radius: 14;                                -fx-padding: 0 14;                                -fx-cursor: hand;                                -fx-border-width: 0;                                -fx-alignment: CENTER_LEFT;" text="←  Back" />
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <Label style="-fx-text-fill: white;                                   -fx-background-color: #6c5ce7;                                   -fx-background-radius: 8;                                   -fx-padding: 6 12;                                   -fx-font-size: 14;                                   -fx-font-weight: bold;                                   -fx-font-family: 'Segoe UI';" text="SP" />
+                    <Label style="-fx-text-fill: white;                                   -fx-font-size: 26;                                   -fx-font-weight: bold;                                   -fx-font-family: 'Segoe UI';" text="SmartPark" />
+                </HBox>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <Region prefHeight="6" />
+
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label style="-fx-text-fill: #a29bfe;                           -fx-font-size: 11;                           -fx-font-weight: bold;                           -fx-font-family: 'Segoe UI';                           -fx-letter-spacing: 2;" text="MANAGE SLOTS" />
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <Region prefHeight="14" />
+
+        <HBox spacing="14">
+            <VBox alignment="CENTER" spacing="4" style="-fx-background-color: rgba(28,22,50,0.82);                          -fx-background-radius: 12;                          -fx-padding: 10 14;                          -fx-border-color: rgba(108,92,231,0.45);                          -fx-border-width: 1;                          -fx-border-radius: 12;                          -fx-pref-width: 150;">
+                <Label fx:id="statTotal" style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="0" />
+                <Label style="-fx-text-fill: #6a6a8a; -fx-font-size: 10; -fx-font-family: 'Segoe UI';" text="TOTAL" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" style="-fx-background-color: rgba(28,22,50,0.82);                          -fx-background-radius: 12;                          -fx-padding: 10 14;                          -fx-border-color: #00b894;                          -fx-border-width: 1;                          -fx-border-radius: 12;                          -fx-pref-width: 150;">
+                <Label fx:id="statAvailable" style="-fx-text-fill: #55efc4; -fx-font-size: 20; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="0" />
+                <Label style="-fx-text-fill: #6a6a8a; -fx-font-size: 10; -fx-font-family: 'Segoe UI';" text="AVAILABLE" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" style="-fx-background-color: rgba(28,22,50,0.82);                          -fx-background-radius: 12;                          -fx-padding: 10 14;                          -fx-border-color: #e17055;                          -fx-border-width: 1;                          -fx-border-radius: 12;                          -fx-pref-width: 150;">
+                <Label fx:id="statOccupied" style="-fx-text-fill: #e17055; -fx-font-size: 20; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="0" />
+                <Label style="-fx-text-fill: #6a6a8a; -fx-font-size: 10; -fx-font-family: 'Segoe UI';" text="OCCUPIED" />
+            </VBox>
+            <VBox alignment="CENTER" spacing="4" style="-fx-background-color: rgba(28,22,50,0.82);                          -fx-background-radius: 12;                          -fx-padding: 10 14;                          -fx-border-color: rgba(108,92,231,0.45);                          -fx-border-width: 1;                          -fx-border-radius: 12;                          -fx-pref-width: 150;">
+                <Label fx:id="statEV" style="-fx-text-fill: #a29bfe; -fx-font-size: 20; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="0" />
+                <Label style="-fx-text-fill: #6a6a8a; -fx-font-size: 10; -fx-font-family: 'Segoe UI';" text="EV SLOTS" />
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+        </HBox>
+
+        <Region prefHeight="12" />
+
+        <ScrollPane style="-fx-background: transparent; -fx-background-color: transparent;                            -fx-border-color: rgba(108,92,231,0.3);                            -fx-border-radius: 14;                            -fx-border-width: 1.2;                            -fx-background-radius: 14;" VBox.vgrow="ALWAYS">
+            <VBox fx:id="slotGrid" spacing="8" style="-fx-background-color: rgba(28,22,50,0.40);                          -fx-background-radius: 14;                          -fx-padding: 14;                          -fx-min-width: 980;">
+            </VBox>
+        </ScrollPane>
+
+        <Region prefHeight="12" />
+
+        <HBox spacing="12" style="-fx-background-color: rgba(28,22,50,0.82);                      -fx-background-radius: 14;                      -fx-padding: 12 18;                      -fx-border-color: rgba(108,92,231,0.45);                      -fx-border-width: 1.2;                      -fx-border-radius: 14;">
+            <ComboBox fx:id="typeCombo" style="-fx-background-color: #0b0b14;                              -fx-text-fill: white;                              -fx-font-size: 12;                              -fx-font-family: 'Segoe UI';                              -fx-background-radius: 8;                              -fx-padding: 4 8;                              -fx-border-color: rgba(108,92,231,0.3);                              -fx-border-radius: 8;                              -fx-border-width: 1;                              -fx-pref-width: 130;" />
+            <Button fx:id="btnAdd" onAction="#handleAddSlot" prefHeight="32" prefWidth="100" style="-fx-background-color: #00b894;                            -fx-text-fill: white;                            -fx-font-size: 12;                            -fx-font-weight: bold;                            -fx-font-family: 'Segoe UI';                            -fx-background-radius: 8;                            -fx-cursor: hand;                            -fx-border-width: 0;" text="+ Add" />
+            <Label style="-fx-text-fill: #6a6a8a; -fx-font-size: 12; -fx-font-family: 'Segoe UI'; -fx-padding: 0 4;" text="|" />
+            <TextField fx:id="slotIdField" promptText="Slot ID" style="-fx-background-color: #0b0b14;                               -fx-text-fill: white;                               -fx-font-size: 12;                               -fx-font-family: 'Segoe UI';                               -fx-background-radius: 8;                               -fx-padding: 6 10;                               -fx-border-color: rgba(108,92,231,0.3);                               -fx-border-radius: 8;                               -fx-border-width: 1;                               -fx-prompt-text-fill: #5a5a7a;                               -fx-pref-width: 80;" />
+            <Button fx:id="btnRemove" onAction="#handleRemoveSlot" prefHeight="32" prefWidth="100" style="-fx-background-color: #e17055;                            -fx-text-fill: white;                            -fx-font-size: 12;                            -fx-font-weight: bold;                            -fx-font-family: 'Segoe UI';                            -fx-background-radius: 8;                            -fx-cursor: hand;                            -fx-border-width: 0;" text="− Remove" />
+            <Label style="-fx-text-fill: #6a6a8a; -fx-font-size: 12; -fx-font-family: 'Segoe UI'; -fx-padding: 0 4;" text="|" />
+            <ComboBox fx:id="editTypeCombo" style="-fx-background-color: #0b0b14;                              -fx-text-fill: white;                              -fx-font-size: 12;                              -fx-font-family: 'Segoe UI';                              -fx-background-radius: 8;                              -fx-padding: 4 8;                              -fx-border-color: rgba(108,92,231,0.3);                              -fx-border-radius: 8;                              -fx-border-width: 1;                              -fx-pref-width: 110;" />
+            <Button fx:id="btnEdit" onAction="#handleEditSlot" prefHeight="32" prefWidth="80" style="-fx-background-color: rgba(108,92,231,0.2);                            -fx-text-fill: #a29bfe;                            -fx-font-size: 12;                            -fx-font-weight: bold;                            -fx-font-family: 'Segoe UI';                            -fx-background-radius: 8;                            -fx-cursor: hand;                            -fx-border-width: 0;" text="Edit" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnSave" onAction="#handleSave" prefHeight="32" prefWidth="90" style="-fx-background-color: #6c5ce7;                            -fx-text-fill: white;                            -fx-font-size: 12;                            -fx-font-weight: bold;                            -fx-font-family: 'Segoe UI';                            -fx-background-radius: 8;                            -fx-cursor: hand;                            -fx-border-width: 0;" text="Save" />
+        </HBox>
+
+        <Region prefHeight="12" />
+
+        <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: rgba(255,255,255,0.02);                      -fx-background-radius: 10;                      -fx-padding: 10 18;">
+            <Label fx:id="statusLabel" style="-fx-text-fill: #6a6a8a;                           -fx-font-size: 11;                           -fx-font-family: 'Segoe UI';" text="Ready" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label style="-fx-text-fill: #3a3a5a;                           -fx-font-size: 11;                           -fx-font-family: 'Segoe UI';" text="Smart Park" />
+        </HBox>
+
+    </VBox>
+
+</StackPane>

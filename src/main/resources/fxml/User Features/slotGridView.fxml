@@ -1,0 +1,980 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="720" prefWidth="1200" style="-fx-background-color: #0f0f1a; -fx-font-family: 'Segoe UI';" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.smartpark.controllers.SlotGridController">
+
+    <!-- Top Nav Bar -->
+    <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-background-color: #11101a; -fx-border-color: #1e1a2e; -fx-border-width: 0 0 1 0;                  -fx-padding: 16 28; -fx-pref-height: 68;">
+        <Button onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: #a29bfe;                        -fx-font-size: 12; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';                        -fx-border-width: 0; -fx-cursor: hand; -fx-padding: 6 10;" text="← Back" />
+        <HBox alignment="CENTER_LEFT" spacing="12">
+            <Label style="-fx-text-fill: white; -fx-background-color: #6c5ce7; -fx-background-radius: 8;                           -fx-padding: 6 12; -fx-font-size: 14; -fx-font-weight: bold;" text="SP" />
+            <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="SmartPark" />
+        </HBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label style="-fx-text-fill: #a29bfe; -fx-font-size: 13; -fx-font-weight: bold;" text="🅿  Slot Grid" />
+    </HBox>
+
+    <!-- Toolbar / Filter Row -->
+    <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: #12121f; -fx-pref-height: 66; -fx-padding: 0 24;">
+
+        <Label style="-fx-text-fill: #c0c0d0; -fx-font-size: 14;" text="Filter:" />
+
+        <ToggleButton fx:id="filterAll" selected="true" style="-fx-background-color: #1e1a2e; -fx-text-fill: white;                              -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #2e2a42; -fx-border-radius: 8; -fx-border-width: 1;" text="⊞  All">
+            <toggleGroup>
+                <ToggleGroup fx:id="filterGroup" />
+            </toggleGroup>
+        </ToggleButton>
+
+        <ToggleButton fx:id="filterCompact" style="-fx-background-color: #1e1a2e; -fx-text-fill: white;                              -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #2e2a42; -fx-border-radius: 8; -fx-border-width: 1;" text="🚗  Compact" toggleGroup="$filterGroup" />
+
+        <ToggleButton fx:id="filterMotorcycle" style="-fx-background-color: #1e1a2e; -fx-text-fill: white;                              -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #2e2a42; -fx-border-radius: 8; -fx-border-width: 1;" text="🏍  Motorcycle" toggleGroup="$filterGroup" />
+
+        <ToggleButton fx:id="filterLarge" style="-fx-background-color: #1e1a2e; -fx-text-fill: white;                              -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #2e2a42; -fx-border-radius: 8; -fx-border-width: 1;" text="🚐  Large" toggleGroup="$filterGroup" />
+
+        <ToggleButton fx:id="filterEV" style="-fx-background-color: #1e1a2e; -fx-text-fill: white;                              -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #2e2a42; -fx-border-radius: 8; -fx-border-width: 1;" text="⚡  EV" toggleGroup="$filterGroup" />
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Label fx:id="statsLabel" style="-fx-text-fill: #a29bfe; -fx-font-size: 14; -fx-font-weight: bold;" text="-- / -- Available" />
+
+        <Button fx:id="refreshBtn" onAction="#handleRefresh" prefHeight="40" prefWidth="124" style="-fx-background-color: transparent; -fx-text-fill: white;                        -fx-font-size: 13; -fx-font-weight: bold; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #2e2a42; -fx-border-radius: 8; -fx-border-width: 1;" text="↻  Refresh" />
+    </HBox>
+
+    <!-- Legend Row -->
+    <HBox alignment="CENTER_LEFT" spacing="28" style="-fx-background-color: #0f0f1a; -fx-pref-height: 44; -fx-padding: 8 24;">
+
+        <!-- Free (Green) -->
+        <HBox alignment="CENTER_LEFT" spacing="7" />
+
+        <!-- Occupied (Red) -->
+        <HBox alignment="CENTER_LEFT" spacing="7" />
+
+        <!-- EV Slot (Teal accent) -->
+        <HBox alignment="CENTER_LEFT" spacing="7" />
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Label style="-fx-text-fill: #4a4a6a; -fx-font-size: 11;" text="Green = Free  ·  Red = Occupied" />
+    </HBox>
+
+    <!-- Scrollable Grid Area -->
+    <ScrollPane fitToWidth="true" style="-fx-background: #0f0f1a; -fx-background-color: #0f0f1a;                        -fx-border-width: 0; -fx-padding: 0;" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="gridContainer" hgap="20" style="-fx-background-color: #0f0f1a; -fx-padding: 28;" vgap="20">
+
+                        <!-- Placeholder slot tiles replaced by the controller -->
+            
+            <!-- Compact - FREE (green) -->
+            <StackPane maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#01" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="30.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#02" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="124.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#03" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="218.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#04" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="312.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#05" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="406.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#06" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#07" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#08" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#09" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#10" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#11" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin>
+                     <Insets top="-62.0" />
+                  </StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin>
+                     <Insets top="12.0" />
+                  </StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin>
+                     <Insets top="78.0" />
+                  </StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#12" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="30.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#13" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="124.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#14" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="218.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#15" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="312.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#16" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="406.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#17" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#18" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 11; -fx-font-weight: bold;" text="Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="594.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#19" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 11; -fx-font-weight: bold;" text="Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="688.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#20" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin>
+                     <Insets top="-62.0" />
+                  </StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 11; -fx-font-weight: bold;" text="Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin>
+                     <Insets top="12.0" />
+                  </StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin>
+                     <Insets top="78.0" />
+                  </StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="782.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#21" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="876.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#22" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="970.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#23" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="30.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#24" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="124.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#25" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚗  Compact" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="218.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#26" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="312.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#27" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="406.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#28" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#29" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="594.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#30" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="688.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#31" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="782.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#32" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="876.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#33" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="970.0" layoutY="30.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#34" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="30.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#35" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="124.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#36" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="218.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#37" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🏍  Motorcycle" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="312.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#38" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="406.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#39" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#40" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="594.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#41" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="688.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#42" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="782.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#43" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="876.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#44" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="970.0" layoutY="124.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#45" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="30.0" layoutY="218.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#46" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="124.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#47" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="218.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#48" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="312.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#49" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="406.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#50" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="🚐  Large" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#51" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="⚡  EV" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="500.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#52" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="⚡  EV" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="594.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#53" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="⚡  EV" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="594.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#54" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="⚡  EV" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+         <StackPane layoutX="876.0" layoutY="406.0" maxHeight="114.0" prefHeight="114.0" prefWidth="108.0" style="-fx-background-color: #0d2e18; -fx-background-radius: 14; -fx-border-color: #00b894; -fx-border-width: 2; -fx-border-radius: 14; -fx-effect: dropshadow(gaussian, rgba(0,184,148,0.22), 10, 0, 0, 2);">
+            <children>
+               <Label alignment="TOP_CENTER" contentDisplay="CENTER" style="-fx-font-size: 17; -fx-font-weight: bold; -fx-font-family: 'Segoe UI';" text="#55" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="-62.0" /></StackPane.margin>
+               </Label>
+               <Label alignment="CENTER" contentDisplay="CENTER" style="-fx-font-size: 12; -fx-font-weight: bold;" text="⚡  EV" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="12.0" /></StackPane.margin>
+                  <padding>
+                     <Insets bottom="8.0" />
+                  </padding>
+               </Label>
+               <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" style="-fx-background-color: rgba(0,184,148,0.13); -fx-background-radius: 6; -fx-padding: 2 8; -fx-font-size: 11; -fx-font-weight: bold;" text="Free" textAlignment="CENTER" textFill="#00b894">
+                  <StackPane.margin><Insets top="78.0" /></StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+
+        </FlowPane>
+    </ScrollPane>
+
+    <!-- Bottom Status Bar -->
+    <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: rgba(255,255,255,0.02); -fx-background-radius: 0;                  -fx-padding: 10 24; -fx-border-color: #1e1a2e; -fx-border-width: 1 0 0 0;">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #6a6a8a; -fx-font-size: 11;" />
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
+
+</VBox>
