@@ -225,7 +225,6 @@ Password : siraksamisgreat
 
 | Name | Role |
 |---|---|
-| **Sage** | Project Lead & Integration |
 | **Saad** | Backend Developer |
 | **Taha** | Frontend Developer & Debugger |
 
